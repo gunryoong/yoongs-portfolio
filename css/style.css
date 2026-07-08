@@ -504,7 +504,7 @@ body.menu-open .nav-mobile { display: flex; }
 @media (max-width: 768px) {
   .nav-desktop { display: none; }
   .nav-toggle { display: block; }
-  .work.feature .frame { max-width: 340px; }
+  .work.feature .frame.tall { max-width: 340px; }
   .about { grid-template-columns: 1fr; }
   .index-item { grid-template-columns: 48px 1fr; }
   .index-item .meta { display: none; }

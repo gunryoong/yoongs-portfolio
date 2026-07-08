@@ -32,7 +32,7 @@ if (gallery && typeof WORKS !== "undefined") {
         /* 케이스 스터디형 — 영상 + 타이포 설명 블록 */
         el.className = "work feature reveal";
         const media = item.type === "video"
-          ? `<video src="${item.src}"${poster} muted loop playsinline autoplay preload="metadata"></video>`
+          ? `<video src="${item.src}"${poster} muted loop playsinline preload="none"></video>`
           : `<img src="${item.src}" alt="" loading="lazy">`;
         el.innerHTML = `
           <div class="frame${frameClass}">${media}</div>
@@ -47,6 +47,14 @@ if (gallery && typeof WORKS !== "undefined") {
           </div>`;
         el.querySelector(".frame").addEventListener("click", () => openLightbox(item));
         gallery.appendChild(el);
+
+        /* 화면에 보일 때만 재생 (여러 영상 동시 로드 방지) */
+        const fVid = el.querySelector("video");
+        if (fVid) {
+          new IntersectionObserver((ens) => {
+            ens.forEach((en) => en.isIntersecting ? fVid.play() : fVid.pause());
+          }, { threshold: 0.25 }).observe(fVid);
+        }
         return;
       }
 
