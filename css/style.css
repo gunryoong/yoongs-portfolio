@@ -217,6 +217,7 @@ body.menu-open .nav-mobile { display: flex; }
   overflow: hidden;
 }
 .work .frame.wide { aspect-ratio: 16 / 9; }
+.work .frame.tall { aspect-ratio: 9 / 16; }
 .work .frame img,
 .work .frame video {
   width: 100%; height: 100%;
@@ -260,6 +261,69 @@ body.menu-open .nav-mobile { display: flex; }
   color: var(--ink-faint);
 }
 .work.span-2 { grid-column: span 2; }
+
+/* ---------- feature (case study) item ---------- */
+.work.feature {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(260px, 400px) 1fr;
+  gap: clamp(36px, 6vw, 96px);
+  align-items: center;
+  padding: clamp(24px, 4vw, 64px) 0;
+  cursor: default;
+}
+.work.feature .frame { cursor: pointer; }
+.feature-text .f-kicker {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 18px;
+}
+.feature-text .f-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(28px, 3.5vw, 46px);
+  line-height: 1.12;
+}
+.feature-text .f-title em { font-style: italic; }
+.feature-text .f-meta {
+  margin-top: 12px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.feature-text .f-desc {
+  margin-top: 24px;
+  max-width: 46ch;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+.f-lines {
+  margin-top: 40px;
+  list-style: none;
+  border-top: 1px solid var(--line);
+  max-width: 440px;
+}
+.f-lines li {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+}
+.f-lines .l-num {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--ink-faint);
+}
+.f-lines .l-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(18px, 2.2vw, 24px);
+  line-height: 1.3;
+}
 
 .gallery-empty {
   grid-column: 1 / -1;
@@ -387,6 +451,8 @@ body.menu-open .nav-mobile { display: flex; }
   .nav-toggle { display: block; }
   .gallery { grid-template-columns: 1fr; }
   .work.span-2 { grid-column: span 1; }
+  .work.feature { grid-template-columns: 1fr; }
+  .work.feature .frame { max-width: 340px; }
   .about { grid-template-columns: 1fr; }
   .index-item { grid-template-columns: 48px 1fr; }
   .index-item .meta { display: none; }

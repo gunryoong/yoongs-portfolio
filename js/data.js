@@ -27,7 +27,18 @@ const WORKS = {
   ],
 
   "ai-video": [
-    // { src: "assets/ai-video/example.mp4", title: "AI Film", type: "video", wide: true },
+    {
+      src: "assets/ai-video/innerglow-cf.mp4",
+      poster: "assets/ai-video/innerglow-cf-poster.jpg",
+      title: "INNERGLOW — <em>Collagen Jelly CF</em>",
+      client: "Innerglow",
+      type: "video",
+      tall: true,
+      feature: true,
+      meta: "AI Generated Commercial · 9:16 · 15s",
+      desc: "지친 오후의 사무실에서 시작해 한 포의 젤리로 끝나는 15초 풀퍼널 커머셜. 기획·카피부터 이미지 및 모션 생성, 편집까지 전 과정을 AI 파이프라인으로 제작했습니다.",
+      lines: ["커피로도 안 되네", "딱 한 포면 돼", "쉽고, 가볍게 한입", "속부터 탱탱하게"],
+    },
   ],
 
   "video-editing": [

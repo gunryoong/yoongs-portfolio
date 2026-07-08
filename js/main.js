@@ -28,12 +28,37 @@ if (gallery && typeof WORKS !== "undefined") {
   } else {
     items.forEach((item, i) => {
       const el = document.createElement("figure");
+      const frameClass = item.tall ? " tall" : item.wide ? " wide" : "";
+      const poster = item.poster ? ` poster="${item.poster}"` : "";
+
+      if (item.feature) {
+        /* 케이스 스터디형 — 영상 + 타이포 설명 블록 */
+        el.className = "work feature reveal";
+        const media = item.type === "video"
+          ? `<video src="${item.src}"${poster} muted loop playsinline autoplay preload="metadata"></video>`
+          : `<img src="${item.src}" alt="" loading="lazy">`;
+        el.innerHTML = `
+          <div class="frame${frameClass}">${media}</div>
+          <div class="feature-text">
+            <p class="f-kicker">Case ${ROMAN[i] || i + 1}${item.client ? " — " + item.client : ""}</p>
+            <h2 class="f-title">${item.title || ""}</h2>
+            ${item.meta ? `<p class="f-meta">${item.meta}</p>` : ""}
+            ${item.desc ? `<p class="f-desc">${item.desc}</p>` : ""}
+            ${item.lines ? `<ul class="f-lines">${item.lines
+              .map((l, j) => `<li><span class="l-num">${String(j + 1).padStart(2, "0")}</span><span class="l-text">${l}</span></li>`)
+              .join("")}</ul>` : ""}
+          </div>`;
+        el.querySelector(".frame").addEventListener("click", () => openLightbox(item));
+        gallery.appendChild(el);
+        return;
+      }
+
       el.className = "work reveal" + (item.wide ? " span-2" : "");
       const media = item.type === "video"
-        ? `<video src="${item.src}" muted loop playsinline preload="metadata"></video>`
+        ? `<video src="${item.src}"${poster} muted loop playsinline preload="metadata"></video>`
         : `<img src="${item.src}" alt="${item.title || ""}" loading="lazy">`;
       el.innerHTML = `
-        <div class="frame${item.wide ? " wide" : ""}">${media}</div>
+        <div class="frame${frameClass}">${media}</div>
         <figcaption class="cap">
           <span class="num">${ROMAN[i] || i + 1}</span>
           <span class="title">${item.title || ""}</span>
