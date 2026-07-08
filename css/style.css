@@ -10,7 +10,7 @@
   --ink-faint: #999999;
   --line: #e5e5e5;
   --placeholder: #f2f0ed;
-  --serif: 'Cormorant Garamond', 'Song Myung', serif;
+  --serif: 'Cormorant Garamond', 'Nanum Myeongjo', serif;
   --sans: 'Inter', 'Pretendard', -apple-system, 'Apple SD Gothic Neo', sans-serif;
   --pad: clamp(20px, 4vw, 56px);
 }
