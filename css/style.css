@@ -10,7 +10,7 @@
   --ink-faint: #999999;
   --line: #e5e5e5;
   --placeholder: #f2f0ed;
-  --serif: 'Cormorant Garamond', 'Nanum Myeongjo', serif;
+  --serif: 'Cormorant Garamond', 'Song Myung', serif;
   --sans: 'Inter', 'Pretendard', -apple-system, 'Apple SD Gothic Neo', sans-serif;
   --pad: clamp(20px, 4vw, 56px);
 }
@@ -26,6 +26,7 @@ body {
   font-size: 15px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  font-synthesis: weight; /* 한글에 가짜 이탤릭 합성 방지 */
 }
 
 a { color: inherit; text-decoration: none; }
