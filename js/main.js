@@ -22,10 +22,7 @@ if (gallery && typeof WORKS !== "undefined") {
   const key = gallery.dataset.gallery;
   const items = WORKS[key] || [];
 
-  if (items.length === 0) {
-    gallery.innerHTML =
-      '<div class="gallery-empty">Coming soon — 작업물 준비 중</div>';
-  } else {
+  {
     items.forEach((item, i) => {
       const el = document.createElement("figure");
       const frameClass = item.tall ? " tall" : item.wide ? " wide" : "";
@@ -53,7 +50,7 @@ if (gallery && typeof WORKS !== "undefined") {
         return;
       }
 
-      el.className = "work reveal" + (item.wide ? " span-2" : "");
+      el.className = "work reveal";
       const media = item.type === "video"
         ? `<video src="${item.src}"${poster} muted loop playsinline preload="metadata"></video>`
         : `<img src="${item.src}" alt="${item.title || ""}" loading="lazy">`;
@@ -74,7 +71,90 @@ if (gallery && typeof WORKS !== "undefined") {
         el.addEventListener("mouseleave", () => vid.pause());
       }
     });
+
+    /* 작품이 채워질 때까지 레일을 유지하는 placeholder 타일 */
+    const MIN_SLIDES = 5;
+    for (let i = items.length; i < MIN_SLIDES; i++) {
+      const ph = document.createElement("figure");
+      ph.className = "work ph reveal";
+      ph.innerHTML = `
+        <div class="frame"><span class="ph-num">${ROMAN[i] || i + 1}</span></div>
+        <figcaption class="cap">
+          <span class="num">${ROMAN[i] || i + 1}</span>
+          <span class="title">Coming soon</span>
+        </figcaption>`;
+      gallery.appendChild(ph);
+    }
   }
+
+  /* ---- 휠 가로 레일 (데스크톱) ---- */
+  const isDesktop = () => window.innerWidth > 768;
+  const railMax = () => gallery.scrollWidth - gallery.clientWidth;
+  let railTarget = 0;
+  let railAnimating = false;
+
+  const prog = document.createElement("div");
+  prog.className = "rail-progress";
+  prog.innerHTML =
+    '<span class="rp-count"></span><span class="rp-track"><span class="rp-fill"></span></span><span class="rp-hint">Scroll →</span>';
+  gallery.after(prog);
+  const rpCount = prog.querySelector(".rp-count");
+  const rpFill = prog.querySelector(".rp-fill");
+  const total = gallery.children.length;
+
+  function updateProgress() {
+    const max = railMax();
+    const p = max > 0 ? gallery.scrollLeft / max : 1;
+    rpFill.style.width = p * 100 + "%";
+    const idx = Math.max(1, Math.min(total, Math.round(p * (total - 1)) + 1));
+    rpCount.textContent =
+      String(idx).padStart(2, "0") + " / " + String(total).padStart(2, "0");
+  }
+  updateProgress();
+  gallery.addEventListener("scroll", updateProgress);
+  window.addEventListener("resize", updateProgress);
+
+  function railTick() {
+    const diff = railTarget - gallery.scrollLeft;
+    if (Math.abs(diff) < 0.5) {
+      gallery.scrollLeft = railTarget;
+      railAnimating = false;
+      updateProgress();
+      return;
+    }
+    gallery.scrollLeft += diff * 0.14;
+    updateProgress();
+    requestAnimationFrame(railTick);
+  }
+  function railGo() {
+    if (!railAnimating) { railAnimating = true; requestAnimationFrame(railTick); }
+  }
+  const railPos = () => (railAnimating ? railTarget : gallery.scrollLeft);
+
+  window.addEventListener("wheel", (e) => {
+    if (!isDesktop()) return;
+    const max = railMax();
+    if (max <= 0) return;
+    /* 레일이 화면 중앙 근처에 있을 때만 휠을 가로 이동으로 전환 */
+    const r = gallery.getBoundingClientRect();
+    if (r.bottom < window.innerHeight * 0.35 || r.top > window.innerHeight * 0.75) return;
+    const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    const cur = railPos();
+    /* 양 끝에서는 하이재킹을 풀어 페이지 세로 스크롤로 복귀 */
+    if ((delta > 0 && cur >= max - 1) || (delta < 0 && cur <= 1)) return;
+    e.preventDefault();
+    railTarget = Math.max(0, Math.min(max, cur + delta));
+    railGo();
+  }, { passive: false });
+
+  document.addEventListener("keydown", (e) => {
+    if (!isDesktop() || railMax() <= 0) return;
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    const step = gallery.clientWidth * 0.5;
+    railTarget = Math.max(0, Math.min(railMax(),
+      railPos() + (e.key === "ArrowRight" ? step : -step)));
+    railGo();
+  });
 }
 
 /* lightbox */
