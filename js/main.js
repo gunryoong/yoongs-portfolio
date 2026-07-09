@@ -163,6 +163,59 @@ if (gallery && typeof WORKS !== "undefined") {
   });
 }
 
+/* ---- 메인: AI 비디오 스크롤 쇼케이스 ---- */
+const scBody = document.querySelector(".sc-body");
+if (scBody && typeof WORKS !== "undefined") {
+  const vids = (WORKS["ai-video"] || []).filter((v) => v.type === "video");
+  const titlesEl = scBody.querySelector(".sc-titles");
+  const track = scBody.querySelector(".sc-track");
+  const mediaEl = scBody.querySelector(".sc-media");
+
+  vids.forEach((v, i) => {
+    const a = document.createElement("a");
+    a.className = "sc-item";
+    a.href = "ai-video.html";
+    a.innerHTML = `
+      <span class="sc-num">CASE ${pad2(i + 1)}</span>
+      <h3>${v.title}</h3>
+      ${v.meta ? `<p class="sc-meta">${v.meta}</p>` : ""}
+      ${v.poster ? `<img class="sc-inline" src="${v.poster}" alt="" loading="lazy">` : ""}`;
+    titlesEl.appendChild(a);
+
+    const f = document.createElement("div");
+    f.className = "sc-frame";
+    f.innerHTML = `<video src="${v.src}"${v.poster ? ` poster="${v.poster}"` : ""} muted loop playsinline preload="none"></video>`;
+    track.appendChild(f);
+  });
+
+  const items = Array.from(titlesEl.children);
+  const frames = Array.from(track.children);
+  let scTicking = false;
+
+  function scSync() {
+    scTicking = false;
+    if (window.innerWidth <= 768 || frames.length === 0) return;
+    const rect = scBody.getBoundingClientRect();
+    const stickyH = mediaEl.clientHeight;
+    const topOffset = mediaEl.offsetTop === 0 ? window.innerHeight * 0.14 : window.innerHeight * 0.14;
+    const range = rect.height - stickyH;
+    if (range <= 0) return;
+    const p = Math.min(1, Math.max(0, (topOffset - rect.top) / range));
+    track.style.transform = `translateY(${-p * (frames.length - 1) * stickyH}px)`;
+    const idx = Math.round(p * (frames.length - 1));
+    items.forEach((el, i) => el.classList.toggle("active", i === idx));
+    frames.forEach((f, i) => {
+      const v = f.querySelector("video");
+      if (i === idx) { if (v.paused) v.play(); } else if (!v.paused) v.pause();
+    });
+  }
+  window.addEventListener("scroll", () => {
+    if (!scTicking) { scTicking = true; requestAnimationFrame(scSync); }
+  }, { passive: true });
+  window.addEventListener("resize", scSync);
+  scSync();
+}
+
 /* lightbox */
 function openLightbox(item) {
   let lb = document.querySelector(".lightbox");
