@@ -6,22 +6,16 @@
    2. 아래 해당 카테고리 배열에 한 줄 추가
 
    항목 형식:
-   { src: "assets/fashion-design/파일명.jpg",  // 경로
-     title: "작품 제목",                        // 제목
-     client: "브랜드/클라이언트",                // 우측 캡션 (생략 가능)
-     type: "image" | "video",                  // 기본값 image
-     wide: true }                              // 가로형(16:9)이면 true
+   { src: "assets/ai-image/파일명.jpg",   // 경로
+     title: "작품 제목",                   // 제목
+     client: "브랜드/클라이언트",           // 우측 캡션 (생략 가능)
+     type: "image" | "video",             // 기본값 image
+     wide: true,                          // 가로형(16:9)
+     tall: true,                          // 세로형(9:16)
+     feature: true }                      // 케이스 스터디형 (+ meta, desc, lines)
    ============================================ */
 
 const WORKS = {
-  "fashion-design": [
-    // { src: "assets/fashion-design/example.jpg", title: "Collection 01", client: "Brand" },
-  ],
-
-  "photoshoot": [
-    // { src: "assets/photoshoot/example.jpg", title: "Editorial", client: "Magazine" },
-  ],
-
   "ai-image": [
     // { src: "assets/ai-image/example.jpg", title: "AI Editorial", client: "Personal" },
   ],

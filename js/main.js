@@ -1,8 +1,6 @@
 /* yoong's portfolio — shared script */
 
-const ROMAN = ["I","II","III","IV","V","VI","VII","VIII","IX","X",
-  "XI","XII","XIII","XIV","XV","XVI","XVII","XVIII","XIX","XX",
-  "XXI","XXII","XXIII","XXIV","XXV","XXVI","XXVII","XXVIII","XXIX","XXX"];
+const pad2 = (n) => String(n).padStart(2, "0");
 
 /* header scroll state */
 const header = document.querySelector(".site-header");
@@ -37,7 +35,7 @@ if (gallery && typeof WORKS !== "undefined") {
         el.innerHTML = `
           <div class="frame${frameClass}">${media}</div>
           <div class="feature-text">
-            <p class="f-kicker">Case ${ROMAN[i] || i + 1}${item.client ? " — " + item.client : ""}</p>
+            <p class="f-kicker">Case ${pad2(i + 1)}${item.client ? " — " + item.client : ""}</p>
             <h2 class="f-title">${item.title || ""}</h2>
             ${item.meta ? `<p class="f-meta">${item.meta}</p>` : ""}
             ${item.desc ? `<p class="f-desc">${item.desc}</p>` : ""}
@@ -65,7 +63,7 @@ if (gallery && typeof WORKS !== "undefined") {
       el.innerHTML = `
         <div class="frame${frameClass}">${media}</div>
         <figcaption class="cap">
-          <span class="num">${ROMAN[i] || i + 1}</span>
+          <span class="num">${pad2(i + 1)}</span>
           <span class="title">${item.title || ""}</span>
           ${item.client ? `<span class="client">${item.client}</span>` : ""}
         </figcaption>`;
@@ -86,9 +84,9 @@ if (gallery && typeof WORKS !== "undefined") {
       const ph = document.createElement("figure");
       ph.className = "work ph reveal";
       ph.innerHTML = `
-        <div class="frame"><span class="ph-num">${ROMAN[i] || i + 1}</span></div>
+        <div class="frame"><span class="ph-num">${pad2(i + 1)}</span></div>
         <figcaption class="cap">
-          <span class="num">${ROMAN[i] || i + 1}</span>
+          <span class="num">${pad2(i + 1)}</span>
           <span class="title">Coming soon</span>
         </figcaption>`;
       gallery.appendChild(ph);
