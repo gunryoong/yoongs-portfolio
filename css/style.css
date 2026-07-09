@@ -149,6 +149,85 @@ body.menu-open .nav-mobile { display: flex; }
   letter-spacing: 0.02em;
 }
 
+/* ---------- home: 풀스크린 비디오 피드 (depoluxe 스타일) ---------- */
+.feed { position: relative; }
+.feed-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--bg);
+}
+.feed-slides { position: absolute; inset: 0; }
+.feed-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+.fs-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+}
+.fs-media video {
+  max-width: 90vw;
+  max-height: 80vh;
+  object-fit: contain;
+}
+.fs-caption {
+  position: absolute;
+  left: var(--pad);
+  bottom: 44px;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+}
+.feed-slide.active .fs-caption { opacity: 1; }
+.fs-caption .fs-num {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--ink-faint);
+  margin-bottom: 10px;
+}
+.fs-caption h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(26px, 3.6vw, 54px);
+  line-height: 1.1;
+}
+.fs-caption h2 em { font-style: italic; }
+.feed-ui {
+  position: absolute;
+  top: 84px;
+  left: var(--pad);
+  right: var(--pad);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  pointer-events: none;
+}
+.feed-ui .feed-label,
+.feed-ui .feed-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+}
+.feed-ui .feed-count { font-variant-numeric: tabular-nums; }
+@media (max-width: 768px) {
+  .feed-ui .feed-label { display: none; }
+  .fs-caption h2 { font-size: 24px; }
+}
+
 /* ---------- home: category index ---------- */
 .index-list {
   border-top: 1px solid var(--line);

@@ -163,6 +163,93 @@ if (gallery && typeof WORKS !== "undefined") {
   });
 }
 
+/* ---- 메인: 풀스크린 비디오 피드 (휠 스크롤 → 축소, 멈추면 확대) ---- */
+const feed = document.querySelector(".feed");
+if (feed && typeof WORKS !== "undefined") {
+  const vids = (WORKS["ai-video"] || []).filter((v) => v.type === "video");
+  const slidesEl = feed.querySelector(".feed-slides");
+  const fcCur = feed.querySelector(".fc-cur");
+  const fcTotal = feed.querySelector(".fc-total");
+
+  vids.forEach((v, i) => {
+    const s = document.createElement("a");
+    s.className = "feed-slide";
+    s.href = "ai-video.html";
+    s.innerHTML = `
+      <div class="fs-media">
+        <video src="${v.src}"${v.poster ? ` poster="${v.poster}"` : ""} muted loop playsinline preload="${i === 0 ? "auto" : "none"}"></video>
+      </div>
+      <div class="fs-caption">
+        <span class="fs-num">CASE ${pad2(i + 1)}${v.client ? " — " + v.client.toUpperCase() : ""}</span>
+        <h2>${v.title}</h2>
+      </div>`;
+    slidesEl.appendChild(s);
+  });
+
+  const slides = Array.from(slidesEl.children);
+  const medias = slides.map((s) => s.querySelector(".fs-media"));
+  const videos = slides.map((s) => s.querySelector("video"));
+  const n = slides.length;
+  fcTotal.textContent = pad2(n);
+  feed.style.height = n * 100 + "vh";
+
+  let scale = 1;
+  let targetScale = 1;
+  let idleTimer = null;
+  let snapping = false;
+  let snapTarget = 0;
+  let lastIdx = -1;
+
+  const feedTop = () => feed.getBoundingClientRect().top + window.scrollY;
+  const progress = () => {
+    const vh = window.innerHeight;
+    return Math.min(n - 1, Math.max(0, (window.scrollY - feedTop()) / vh));
+  };
+
+  function feedLoop() {
+    scale += (targetScale - scale) * 0.11;
+    const p = progress();
+    slides.forEach((s, i) => {
+      s.style.transform = `translateY(${(i - p) * 100}%)`;
+    });
+    medias.forEach((m) => { m.style.transform = `scale(${scale.toFixed(4)})`; });
+    const idx = Math.round(p);
+    const settled = Math.abs(scale - 1) < 0.06;
+    slides.forEach((s, i) => s.classList.toggle("active", i === idx && settled));
+    if (idx !== lastIdx) {
+      lastIdx = idx;
+      fcCur.textContent = pad2(idx + 1);
+      videos.forEach((v, i) => { if (i === idx) v.play(); else if (!v.paused) v.pause(); });
+    }
+    requestAnimationFrame(feedLoop);
+  }
+  requestAnimationFrame(feedLoop);
+
+  window.addEventListener("scroll", () => {
+    if (snapping) {
+      if (Math.abs(window.scrollY - snapTarget) < 2) snapping = false;
+      return;
+    }
+    const rect = feed.getBoundingClientRect();
+    const inFeed = rect.top <= 1 && rect.bottom >= window.innerHeight - 1;
+    if (!inFeed) { targetScale = 1; return; }
+
+    targetScale = 0.62; /* 스크롤 중: 축소 */
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      targetScale = 1; /* 멈추면: 확대 */
+      const vh = window.innerHeight;
+      const snapped = Math.round(progress());
+      const targetY = Math.round(feedTop() + snapped * vh);
+      if (Math.abs(window.scrollY - targetY) > 4) {
+        snapping = true;
+        snapTarget = targetY;
+        window.scrollTo({ top: targetY, behavior: "smooth" });
+      }
+    }, 200);
+  }, { passive: true });
+}
+
 /* lightbox */
 function openLightbox(item) {
   let lb = document.querySelector(".lightbox");
