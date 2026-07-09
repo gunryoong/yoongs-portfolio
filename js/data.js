@@ -76,6 +76,12 @@ const WORKS = {
   ],
 
   "video-editing": [
-    // { src: "assets/video-editing/example.mp4", title: "Brand Film", type: "video", wide: true },
+    { src: "assets/video-editing/ve-malwang.mp4", poster: "assets/video-editing/ve-malwang-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/ve-0513.mp4", poster: "assets/video-editing/ve-0513-poster.jpg", type: "video", wide: true },
+    { src: "assets/video-editing/ve-ezed.mp4", poster: "assets/video-editing/ve-ezed-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/ve-sangmin.mp4", poster: "assets/video-editing/ve-sangmin-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/ve-janghangjun.mp4", poster: "assets/video-editing/ve-janghangjun-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/ve-telemarketer.mp4", poster: "assets/video-editing/ve-telemarketer-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/ve-alphai.mp4", poster: "assets/video-editing/ve-alphai-poster.jpg", type: "video", tall: true },
   ],
 };
