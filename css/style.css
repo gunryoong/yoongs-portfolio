@@ -149,7 +149,7 @@ body.menu-open .nav-mobile { display: flex; }
   letter-spacing: 0.02em;
 }
 
-/* ---------- home: 풀스크린 비디오 피드 (depoluxe 스타일) ---------- */
+/* ---------- home: 다크 캐스케이드 비디오 피드 (depoluxe 홈 스타일) ---------- */
 .feed { position: relative; }
 .feed-sticky {
   position: sticky;
@@ -157,59 +157,97 @@ body.menu-open .nav-mobile { display: flex; }
   height: 100vh;
   height: 100svh;
   overflow: hidden;
-  background: var(--bg);
+  background: #1c1915;
+  transition: background-color 1s ease;
 }
 .feed-slides { position: absolute; inset: 0; }
 .feed-slide {
   position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  will-change: transform;
+  top: 0; left: 0;
+  will-change: transform, width, height;
+  display: block;
 }
-.fs-media {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.feed-slide .fs-box {
+  position: relative;
   width: 100%;
   height: 100%;
-  will-change: transform;
+  overflow: hidden;
+  background: #000;
 }
-.fs-media video {
-  max-width: 90vw;
-  max-height: 80vh;
-  object-fit: contain;
+.feed-slide video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-.fs-caption {
+.fs-tag {
   position: absolute;
-  left: var(--pad);
-  bottom: 44px;
-  opacity: 0;
-  transition: opacity 0.45s ease;
-  pointer-events: none;
+  left: calc(100% + 18px);
+  top: 2px;
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  white-space: nowrap;
+  transition: opacity 0.3s;
 }
-.feed-slide.active .fs-caption { opacity: 1; }
-.fs-caption .fs-num {
-  display: block;
+.fs-tag .t-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: rgba(240, 237, 230, 0.5);
+}
+.fs-tag .t-name {
+  font-family: var(--serif);
+  font-size: 16px;
+  color: rgba(240, 237, 230, 0.9);
+}
+.feed-cap {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+}
+.feed-cap .fcap-title {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(28px, 4vw, 58px);
+  line-height: 1.1;
+  color: #f4f1ea;
+  text-shadow: 0 1px 30px rgba(0,0,0,0.35);
+}
+.feed-cap .fcap-title em { font-style: italic; }
+.feed-cap .fcap-meta {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.16em;
-  color: var(--ink-faint);
-  margin-bottom: 10px;
+  text-transform: uppercase;
+  color: rgba(244, 241, 234, 0.75);
 }
-.fs-caption h2 {
+.feed-client {
+  position: absolute;
+  right: var(--pad);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
   font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(26px, 3.6vw, 54px);
-  line-height: 1.1;
+  font-size: 15px;
+  color: rgba(244, 241, 234, 0.85);
+  opacity: 0;
+  pointer-events: none;
 }
-.fs-caption h2 em { font-style: italic; }
 .feed-ui {
   position: absolute;
   top: 84px;
   left: var(--pad);
   right: var(--pad);
+  z-index: 50;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -220,12 +258,25 @@ body.menu-open .nav-mobile { display: flex; }
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.14em;
-  color: var(--ink-faint);
+  color: rgba(240, 237, 230, 0.55);
 }
 .feed-ui .feed-count { font-variant-numeric: tabular-nums; }
+
+/* 피드 위에 있는 동안 헤더를 다크 모드로 */
+body.over-feed .site-header {
+  background: transparent;
+  backdrop-filter: none;
+  border-bottom-color: transparent;
+}
+body.over-feed .site-header .brand,
+body.over-feed .nav-desktop a { color: #f2efe8; }
+body.over-feed .nav-toggle span { background: #f2efe8; }
+.site-header .brand, .nav-desktop a { transition: color 0.4s; }
+
 @media (max-width: 768px) {
   .feed-ui .feed-label { display: none; }
-  .fs-caption h2 { font-size: 24px; }
+  .fs-tag .t-name { font-size: 13px; }
+  .feed-cap .fcap-title { font-size: 26px; padding: 0 20px; }
 }
 
 /* ---------- home: category index ---------- */

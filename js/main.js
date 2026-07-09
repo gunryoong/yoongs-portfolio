@@ -163,11 +163,16 @@ if (gallery && typeof WORKS !== "undefined") {
   });
 }
 
-/* ---- 메인: 풀스크린 비디오 피드 (휠 스크롤 → 축소, 멈추면 확대) ---- */
+/* ---- 메인: 다크 캐스케이드 피드 (스크롤 중 썸네일 스택, 멈추면 풀스크린 확대) ---- */
 const feed = document.querySelector(".feed");
 if (feed && typeof WORKS !== "undefined") {
   const vids = (WORKS["ai-video"] || []).filter((v) => v.type === "video");
   const slidesEl = feed.querySelector(".feed-slides");
+  const sticky = feed.querySelector(".feed-sticky");
+  const cap = feed.querySelector(".feed-cap");
+  const capTitle = feed.querySelector(".fcap-title");
+  const capMeta = feed.querySelector(".fcap-meta");
+  const clientEl = feed.querySelector(".feed-client");
   const fcCur = feed.querySelector(".fc-cur");
   const fcTotal = feed.querySelector(".fc-total");
 
@@ -176,28 +181,27 @@ if (feed && typeof WORKS !== "undefined") {
     s.className = "feed-slide";
     s.href = "ai-video.html";
     s.innerHTML = `
-      <div class="fs-media">
-        <video src="${v.src}"${v.poster ? ` poster="${v.poster}"` : ""} muted loop playsinline preload="${i === 0 ? "auto" : "none"}"></video>
+      <div class="fs-box">
+        <video src="${v.src}"${v.poster ? ` poster="${v.poster}"` : ""} muted loop playsinline preload="${i === 0 ? "auto" : "metadata"}"></video>
       </div>
-      <div class="fs-caption">
-        <span class="fs-num">CASE ${pad2(i + 1)}${v.client ? " — " + v.client.toUpperCase() : ""}</span>
-        <h2>${v.title}</h2>
-      </div>`;
+      <span class="fs-tag"><span class="t-num">${pad2(i + 1)}</span><span class="t-name">${v.client || ""}</span></span>`;
     slidesEl.appendChild(s);
   });
 
   const slides = Array.from(slidesEl.children);
-  const medias = slides.map((s) => s.querySelector(".fs-media"));
+  const tags = slides.map((s) => s.querySelector(".fs-tag"));
   const videos = slides.map((s) => s.querySelector("video"));
   const n = slides.length;
   fcTotal.textContent = pad2(n);
   feed.style.height = n * 100 + "vh";
 
-  let scale = 1;
-  let targetScale = 1;
+  /* 캐스케이드 배치 패턴 (좌→우 계단식) */
+  const X_PAT = [0.03, 0.30, 0.14, 0.42];
+  const W_PAT = [0.34, 0.24, 0.32, 0.26];
+
+  const expand = new Array(n).fill(0);
+  let idleExpand = true; /* 로드 직후: 첫 케이스 확대 상태 */
   let idleTimer = null;
-  let snapping = false;
-  let snapTarget = 0;
   let lastIdx = -1;
 
   const feedTop = () => feed.getBoundingClientRect().top + window.scrollY;
@@ -207,46 +211,70 @@ if (feed && typeof WORKS !== "undefined") {
   };
 
   function feedLoop() {
-    scale += (targetScale - scale) * 0.11;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const mobile = vw <= 768;
     const p = progress();
-    slides.forEach((s, i) => {
-      s.style.transform = `translateY(${(i - p) * 100}%)`;
-    });
-    medias.forEach((m) => { m.style.transform = `scale(${scale.toFixed(4)})`; });
     const idx = Math.round(p);
-    const settled = Math.abs(scale - 1) < 0.06;
-    slides.forEach((s, i) => s.classList.toggle("active", i === idx && settled));
+
+    for (let i = 0; i < n; i++) {
+      const it = vids[i];
+      /* 캐스케이드 rect */
+      const wF = it.tall ? (mobile ? 0.40 : 0.15) : (mobile ? 0.72 : W_PAT[i % 4]);
+      const cw = vw * wF;
+      const ch = it.tall ? cw * 16 / 9 : cw * 9 / 16;
+      const cx = vw * (mobile ? [0.05, 0.22, 0.10, 0.24][i % 4] : X_PAT[i % 4]);
+      const cy = vh * 0.32 + (i - p) * vh * 0.78;
+      /* 풀스크린 rect (세로 영상은 높이 기준 중앙) */
+      let fw, fh, fx, fy;
+      if (it.tall) { fh = vh; fw = vh * 9 / 16; fx = (vw - fw) / 2; fy = 0; }
+      else { fw = vw; fh = vh; fx = 0; fy = 0; }
+
+      const target = idleExpand && i === idx ? 1 : 0;
+      expand[i] += (target - expand[i]) * 0.085;
+      const e = expand[i] < 0.001 ? 0 : expand[i];
+
+      const x = cx + (fx - cx) * e;
+      const y = cy + (fy - cy) * e;
+      const w = cw + (fw - cw) * e;
+      const h = ch + (fh - ch) * e;
+      const s = slides[i];
+      s.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
+      s.style.width = w.toFixed(1) + "px";
+      s.style.height = h.toFixed(1) + "px";
+      s.style.zIndex = e > 0.02 ? 30 : 10 + i;
+      tags[i].style.opacity = (1 - e * 2).toFixed(2);
+
+      /* 화면에 걸린 썸네일 + 확대된 것만 재생 */
+      const onScreen = y < vh && y + h > 0;
+      if (onScreen || e > 0.02) { if (videos[i].paused) videos[i].play().catch(() => {}); }
+      else if (!videos[i].paused) videos[i].pause();
+    }
+
     if (idx !== lastIdx) {
       lastIdx = idx;
+      const it = vids[idx];
       fcCur.textContent = pad2(idx + 1);
-      videos.forEach((v, i) => { if (i === idx) v.play(); else if (!v.paused) v.pause(); });
+      capTitle.innerHTML = it.title || "";
+      capMeta.textContent = it.meta || "";
+      clientEl.textContent = it.client || "";
+      if (it.bg) sticky.style.backgroundColor = it.bg;
     }
+    const eAct = expand[idx];
+    cap.style.opacity = eAct.toFixed(2);
+    clientEl.style.opacity = eAct.toFixed(2);
+
+    /* 피드 위에 있는 동안 헤더 다크 모드 */
+    document.body.classList.toggle("over-feed", feed.getBoundingClientRect().bottom > 90);
+
     requestAnimationFrame(feedLoop);
   }
   requestAnimationFrame(feedLoop);
 
   window.addEventListener("scroll", () => {
-    if (snapping) {
-      if (Math.abs(window.scrollY - snapTarget) < 2) snapping = false;
-      return;
-    }
-    const rect = feed.getBoundingClientRect();
-    const inFeed = rect.top <= 1 && rect.bottom >= window.innerHeight - 1;
-    if (!inFeed) { targetScale = 1; return; }
-
-    targetScale = 0.62; /* 스크롤 중: 축소 */
+    idleExpand = false; /* 스크롤 중: 캐스케이드 */
     clearTimeout(idleTimer);
-    idleTimer = setTimeout(() => {
-      targetScale = 1; /* 멈추면: 확대 */
-      const vh = window.innerHeight;
-      const snapped = Math.round(progress());
-      const targetY = Math.round(feedTop() + snapped * vh);
-      if (Math.abs(window.scrollY - targetY) > 4) {
-        snapping = true;
-        snapTarget = targetY;
-        window.scrollTo({ top: targetY, behavior: "smooth" });
-      }
-    }, 200);
+    idleTimer = setTimeout(() => { idleExpand = true; }, 450); /* 멈추면: 확대 */
   }, { passive: true });
 }
 
