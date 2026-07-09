@@ -150,7 +150,7 @@ body.menu-open .nav-mobile { display: flex; }
 }
 
 /* ---------- home: 다크 캐스케이드 비디오 피드 (depoluxe 홈 스타일) ---------- */
-.feed { position: relative; }
+.feed { position: relative; height: 100vh; height: 100svh; }
 .feed-sticky {
   position: sticky;
   top: 0;
