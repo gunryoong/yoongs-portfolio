@@ -17,7 +17,22 @@
 
 const WORKS = {
   "ai-image": [
-    // { src: "assets/ai-image/example.jpg", title: "AI Editorial", client: "Personal" },
+    { src: "assets/ai-image/ai-01.jpg" },
+    { src: "assets/ai-image/ai-02.jpg" },
+    { src: "assets/ai-image/ai-03.jpg" },
+    { src: "assets/ai-image/ai-04.jpg" },
+    { src: "assets/ai-image/ai-05.jpg" },
+    { src: "assets/ai-image/ai-06.jpg" },
+    { src: "assets/ai-image/ai-07.jpg" },
+    { src: "assets/ai-image/ai-08.jpg" },
+    { src: "assets/ai-image/ai-09.jpg" },
+    { src: "assets/ai-image/ai-10.jpg" },
+    { src: "assets/ai-image/ai-11.jpg" },
+    { src: "assets/ai-image/ai-12.jpg" },
+    { src: "assets/ai-image/ai-13.jpg" },
+    { src: "assets/ai-image/ai-14.jpg" },
+    { src: "assets/ai-image/ai-15.jpg" },
+    { src: "assets/ai-image/ai-16.jpg" },
   ],
 
   "ai-video": [
@@ -76,12 +91,15 @@ const WORKS = {
   ],
 
   "video-editing": [
-    { src: "assets/video-editing/ve-malwang.mp4", poster: "assets/video-editing/ve-malwang-poster.jpg", type: "video", tall: true },
-    { src: "assets/video-editing/ve-0513.mp4", poster: "assets/video-editing/ve-0513-poster.jpg", type: "video", wide: true },
-    { src: "assets/video-editing/ve-ezed.mp4", poster: "assets/video-editing/ve-ezed-poster.jpg", type: "video", tall: true },
-    { src: "assets/video-editing/ve-sangmin.mp4", poster: "assets/video-editing/ve-sangmin-poster.jpg", type: "video", tall: true },
-    { src: "assets/video-editing/ve-janghangjun.mp4", poster: "assets/video-editing/ve-janghangjun-poster.jpg", type: "video", tall: true },
-    { src: "assets/video-editing/ve-telemarketer.mp4", poster: "assets/video-editing/ve-telemarketer-poster.jpg", type: "video", tall: true },
-    { src: "assets/video-editing/ve-alphai.mp4", poster: "assets/video-editing/ve-alphai-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/sone-kimnamgil.mp4", poster: "assets/video-editing/sone-kimnamgil-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/sone-malwang.mp4", poster: "assets/video-editing/sone-malwang-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/sone-simeunkyung.mp4", poster: "assets/video-editing/sone-simeunkyung-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/sone-pinggyego.mp4", poster: "assets/video-editing/sone-pinggyego-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/alphai.mp4", poster: "assets/video-editing/alphai-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/ezed-detector.mp4", poster: "assets/video-editing/ezed-detector-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/ezed-perfume-1.mp4", poster: "assets/video-editing/ezed-perfume-1-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/ezed-perfume-2.mp4", poster: "assets/video-editing/ezed-perfume-2-poster.jpg", type: "video", wide: true },
+    { src: "assets/video-editing/ezed-perfume-3.mp4", poster: "assets/video-editing/ezed-perfume-3-poster.jpg", type: "video", tall: true, sensitive: true },
+    { src: "assets/video-editing/ezed-perfume-4.mp4", poster: "assets/video-editing/ezed-perfume-4-poster.jpg", type: "video", tall: true, sensitive: true },
   ],
 };

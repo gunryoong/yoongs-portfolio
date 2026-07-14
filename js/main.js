@@ -19,8 +19,21 @@ const gallery = document.querySelector("[data-gallery]");
 if (gallery && typeof WORKS !== "undefined") {
   const key = gallery.dataset.gallery;
   const items = WORKS[key] || [];
+  const masonry = gallery.dataset.layout === "masonry";
 
-  {
+  if (masonry) {
+    /* 랜덤 갤러리 — 방문할 때마다 순서 셔플 */
+    gallery.classList.add("masonry");
+    [...items].sort(() => Math.random() - 0.5).forEach((item) => {
+      const el = document.createElement("figure");
+      el.className = "work reveal";
+      el.innerHTML = `<div class="frame"><img src="${item.src}" alt="" loading="lazy"></div>`;
+      el.addEventListener("click", () => openLightbox(item));
+      gallery.appendChild(el);
+    });
+  }
+
+  if (!masonry) {
     items.forEach((item, i) => {
       const el = document.createElement("figure");
       const frameClass = item.tall ? " tall" : item.wide ? " wide" : "";
@@ -60,8 +73,11 @@ if (gallery && typeof WORKS !== "undefined") {
       const media = item.type === "video"
         ? `<video src="${item.src}"${poster} muted loop playsinline preload="metadata"></video>`
         : `<img src="${item.src}" alt="${item.title || ""}" loading="lazy">`;
+      const warn = item.sensitive
+        ? '<div class="sens-warn"><span class="sw-label">SENSITIVE CONTENT</span><span class="sw-text">선정적인 내용이 포함되어 있습니다<br>클릭하면 재생됩니다</span></div>'
+        : "";
       el.innerHTML = `
-        <div class="frame${frameClass}">${media}</div>
+        <div class="frame${frameClass}${item.sensitive ? " sens" : ""}">${media}${warn}</div>
         <figcaption class="cap">
           <span class="num">${pad2(i + 1)}</span>
           <span class="title">${item.title || ""}</span>
@@ -70,9 +86,9 @@ if (gallery && typeof WORKS !== "undefined") {
       el.addEventListener("click", () => openLightbox(item));
       gallery.appendChild(el);
 
-      /* hover-play videos */
+      /* hover-play videos (선정성 항목 제외) */
       const vid = el.querySelector("video");
-      if (vid) {
+      if (vid && !item.sensitive) {
         el.addEventListener("mouseenter", () => vid.play());
         el.addEventListener("mouseleave", () => vid.pause());
       }
@@ -93,7 +109,8 @@ if (gallery && typeof WORKS !== "undefined") {
     }
   }
 
-  /* ---- 휠 가로 레일 (데스크톱) ---- */
+  /* ---- 휠 가로 레일 (데스크톱, 매소너리 페이지 제외) ---- */
+  if (!masonry) {
   const isDesktop = () => window.innerWidth > 768;
   const railMax = () => gallery.scrollWidth - gallery.clientWidth;
   let railTarget = 0;
@@ -161,6 +178,7 @@ if (gallery && typeof WORKS !== "undefined") {
       railPos() + (e.key === "ArrowRight" ? step : -step)));
     railGo();
   });
+  }
 }
 
 /* ---- 메인: 다크 캐스케이드 피드 (스크롤 중 썸네일 스택, 멈추면 풀스크린 확대) ---- */
