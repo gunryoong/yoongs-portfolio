@@ -237,6 +237,10 @@ if (feed && typeof WORKS !== "undefined") {
     }
     const idx = ((Math.round(pFloat) % n) + n) % n;
 
+    /* 전환 중 축소 → 정착하면 풀스크린 (d: 정수 위치에서의 거리 0~0.5) */
+    const d = Math.abs(pFloat - Math.round(pFloat));
+    const scale = 1 - 0.3 * Math.sin(Math.min(0.5, d) * Math.PI);
+
     for (let i = 0; i < n; i++) {
       const it = vids[i];
       /* 무한 루프: 각 슬라이드를 가장 가까운 사이클 위치에 배치 */
@@ -251,7 +255,7 @@ if (feed && typeof WORKS !== "undefined") {
       /* 겹침 슬라이드: 들어오는 쪽은 아래에서 위로 덮고, 나가는 쪽은 느리게 밀림 */
       const y = offset >= 0 ? offset * vh : offset * vh * 0.22;
       const s = slides[i];
-      s.style.transform = `translate3d(${fx.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
+      s.style.transform = `translate3d(${fx.toFixed(1)}px, ${y.toFixed(1)}px, 0) scale(${scale.toFixed(4)})`;
       s.style.width = fw.toFixed(1) + "px";
       s.style.height = fh.toFixed(1) + "px";
       s.style.zIndex = Math.round(100 + offset * 10);
