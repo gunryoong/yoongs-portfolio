@@ -37,6 +37,19 @@ const WORKS = {
 
   "ai-video": [
     {
+      src: "assets/ai-video/esarang-cf.mp4",
+      poster: "assets/ai-video/esarang-cf-poster.jpg",
+      title: "ESARANG DENTAL — <em>Laminate CF</em>",
+      client: "이사랑치과의원",
+      type: "video",
+      wide: true,
+      feature: true,
+      meta: "AI Generated Commercial · 16:9 · 21s",
+      bg: "#223038",
+      desc: "'자연스러운 미소'를 주제로 한 치과 라미네이트 브랜드 필름. 모델 클로즈업부터 셰이드 매칭 디테일, 클리닉 공간까지 AI로 연출했습니다.",
+      lines: ["자연스러운, 미소", "보철과 전문의가 맞추는", "공덕역, 가장 자연스러운 라미네이트"],
+    },
+    {
       src: "assets/ai-video/innerglow-cf.mp4",
       poster: "assets/ai-video/innerglow-cf-poster.jpg",
       title: "INNERGLOW — <em>Collagen Jelly CF</em>",

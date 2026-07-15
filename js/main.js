@@ -213,15 +213,10 @@ if (feed && typeof WORKS !== "undefined") {
   fcTotal.textContent = pad2(n);
   document.body.classList.add("over-feed"); /* 메인은 항상 다크 헤더 */
 
-  /* 캐스케이드 배치 패턴 (좌→우 계단식) */
-  const X_PAT = [0.03, 0.30, 0.14, 0.42];
-  const W_PAT = [0.34, 0.24, 0.32, 0.26];
-
   const HOLD_MS = 6500; /* 각 케이스 풀스크린 유지 시간 */
-  const expand = new Array(n).fill(0);
   let pFloat = 0;       /* 현재 위치 (연속값, 무한 증가) */
   let targetIdx = 0;    /* 목표 케이스 (무한 증가, %n으로 매핑) */
-  let idleExpand = true;
+  let arrived = true;
   let holdUntil = performance.now() + HOLD_MS;
   let lastIdx = -1;
 
@@ -231,13 +226,13 @@ if (feed && typeof WORKS !== "undefined") {
     const mobile = vw <= 768;
 
     /* 자동 로테이션: 유지 시간이 지나면 다음 케이스로 */
-    if (idleExpand && t > holdUntil) {
-      idleExpand = false;
+    if (arrived && t > holdUntil) {
+      arrived = false;
       targetIdx += 1;
     }
-    pFloat += (targetIdx - pFloat) * 0.055;
-    if (!idleExpand && Math.abs(targetIdx - pFloat) < 0.06) {
-      idleExpand = true;
+    pFloat += (targetIdx - pFloat) * 0.06;
+    if (!arrived && Math.abs(targetIdx - pFloat) < 0.02) {
+      arrived = true;
       holdUntil = t + HOLD_MS;
     }
     const idx = ((Math.round(pFloat) % n) + n) % n;
@@ -246,35 +241,23 @@ if (feed && typeof WORKS !== "undefined") {
       const it = vids[i];
       /* 무한 루프: 각 슬라이드를 가장 가까운 사이클 위치에 배치 */
       const k = i + n * Math.round((pFloat - i) / n);
-      /* 캐스케이드 rect */
-      const wF = it.tall ? (mobile ? 0.40 : 0.15) : (mobile ? 0.72 : W_PAT[i % 4]);
-      const cw = vw * wF;
-      const ch = it.tall ? cw * 16 / 9 : cw * 9 / 16;
-      const cx = vw * (mobile ? [0.05, 0.22, 0.10, 0.24][i % 4] : X_PAT[i % 4]);
-      const cy = vh * 0.32 + (k - pFloat) * vh * 0.78;
-      /* 풀스크린 rect (세로 영상은 높이 기준 중앙) */
-      let fw, fh, fx, fy;
-      if (it.tall) { fh = vh; fw = vh * 9 / 16; fx = (vw - fw) / 2; fy = 0; }
-      else { fw = vw; fh = vh; fx = 0; fy = 0; }
+      const offset = k - pFloat;
 
-      const target = idleExpand && i === idx ? 1 : 0;
-      expand[i] += (target - expand[i]) * 0.075;
-      const e = expand[i] < 0.001 ? 0 : expand[i];
+      /* 풀스크린 rect (세로 영상은 데스크톱에서 중앙 필러) */
+      let fw, fh, fx;
+      if (it.tall && !mobile) { fh = vh; fw = vh * 9 / 16; fx = (vw - fw) / 2; }
+      else { fw = vw; fh = vh; fx = 0; }
 
-      const x = cx + (fx - cx) * e;
-      const y = cy + (fy - cy) * e;
-      const w = cw + (fw - cw) * e;
-      const h = ch + (fh - ch) * e;
+      /* 겹침 슬라이드: 들어오는 쪽은 아래에서 위로 덮고, 나가는 쪽은 느리게 밀림 */
+      const y = offset >= 0 ? offset * vh : offset * vh * 0.22;
       const s = slides[i];
-      s.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
-      s.style.width = w.toFixed(1) + "px";
-      s.style.height = h.toFixed(1) + "px";
-      s.style.zIndex = e > 0.02 ? 30 : 10 + i;
-      tags[i].style.opacity = Math.max(0, 1 - e * 2).toFixed(2);
+      s.style.transform = `translate3d(${fx.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
+      s.style.width = fw.toFixed(1) + "px";
+      s.style.height = fh.toFixed(1) + "px";
+      s.style.zIndex = Math.round(100 + offset * 10);
 
-      /* 화면에 걸린 썸네일 + 확대된 것만 재생 */
-      const onScreen = y < vh && y + h > 0;
-      if (onScreen || e > 0.02) { if (videos[i].paused) videos[i].play().catch(() => {}); }
+      /* 화면에 걸린 슬라이드만 재생 */
+      if (Math.abs(offset) < 1) { if (videos[i].paused) videos[i].play().catch(() => {}); }
       else if (!videos[i].paused) videos[i].pause();
     }
 
@@ -287,9 +270,10 @@ if (feed && typeof WORKS !== "undefined") {
       clientEl.textContent = it.client || "";
       if (it.bg) sticky.style.backgroundColor = it.bg;
     }
-    const eAct = expand[idx];
-    cap.style.opacity = eAct.toFixed(2);
-    clientEl.style.opacity = eAct.toFixed(2);
+    /* 전환 중에는 캡션 페이드아웃, 정착하면 페이드인 */
+    const settle = Math.max(0, 1 - Math.abs(pFloat - Math.round(pFloat)) * 3);
+    cap.style.opacity = settle.toFixed(2);
+    clientEl.style.opacity = settle.toFixed(2);
 
     requestAnimationFrame(feedLoop);
   }
@@ -301,13 +285,13 @@ if (feed && typeof WORKS !== "undefined") {
     const now = performance.now();
     if (now - wheelLock < 900 || Math.abs(e.deltaY) < 12) return;
     wheelLock = now;
-    idleExpand = false;
+    arrived = false;
     targetIdx += e.deltaY > 0 ? 1 : -1;
     holdUntil = now + HOLD_MS;
   }, { passive: true });
   document.addEventListener("keydown", (e) => {
     if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
-    idleExpand = false;
+    arrived = false;
     targetIdx += e.key === "ArrowDown" ? 1 : -1;
     holdUntil = performance.now() + HOLD_MS;
   });
