@@ -213,55 +213,73 @@ if (feed && typeof WORKS !== "undefined") {
   fcTotal.textContent = pad2(n);
   document.body.classList.add("over-feed"); /* 메인은 항상 다크 헤더 */
 
-  const HOLD_MS = 6500; /* 각 케이스 풀스크린 유지 시간 */
+  const HOLD_MS = 6000; /* 각 케이스 풀스크린 유지 시간 */
   let pFloat = 0;       /* 현재 위치 (연속값, 무한 증가) */
-  let targetIdx = 0;    /* 목표 케이스 (무한 증가, %n으로 매핑) */
-  let arrived = true;
+  let targetP = 0;      /* 목표 위치 (휠 누적, 연속값) */
+  let idleExpand = true;
   let holdUntil = performance.now() + HOLD_MS;
+  let idleTimer = null;
   let lastIdx = -1;
+  const expand = new Array(n).fill(0);
+
+  /* 대각선·분산 캐스케이드 배치 패턴 (흐름 슬롯 기준, 5개 주기) */
+  const X_PAT = [0.06, 0.58, 0.28, 0.64, 0.12];
+  const W_PAT = [0.30, 0.24, 0.34, 0.21, 0.27];   /* 가로 영상 폭 */
+  const WT_PAT = [0.15, 0.13, 0.17, 0.12, 0.14];  /* 세로 영상 폭 */
+  const YJ_PAT = [0, -0.10, 0.06, -0.05, 0.09];   /* 세로 지터 */
+  const XM_PAT = [0.05, 0.32, 0.12, 0.36, 0.08];  /* 모바일 x */
 
   function feedLoop(t) {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     const mobile = vw <= 768;
 
-    /* 자동 로테이션: 유지 시간이 지나면 다음 케이스로 */
-    if (arrived && t > holdUntil) {
-      arrived = false;
-      targetIdx += 1;
+    /* 자동 로테이션 */
+    if (idleExpand && t > holdUntil && Math.abs(targetP - pFloat) < 0.05) {
+      idleExpand = false;
+      targetP = Math.round(targetP) + 1;
     }
-    pFloat += (targetIdx - pFloat) * 0.06;
-    if (!arrived && Math.abs(targetIdx - pFloat) < 0.02) {
-      arrived = true;
-      holdUntil = t + HOLD_MS;
-    }
+    pFloat += (targetP - pFloat) * 0.07;
     const idx = ((Math.round(pFloat) % n) + n) % n;
-
-    /* 전환 중 축소 → 정착하면 풀스크린 (d: 정수 위치에서의 거리 0~0.5) */
-    const d = Math.abs(pFloat - Math.round(pFloat));
-    const scale = 1 - 0.3 * Math.sin(Math.min(0.5, d) * Math.PI);
+    const nearTarget = Math.abs(targetP - pFloat) < 0.2;
 
     for (let i = 0; i < n; i++) {
       const it = vids[i];
-      /* 무한 루프: 각 슬라이드를 가장 가까운 사이클 위치에 배치 */
+      /* 무한 루프: 가장 가까운 사이클 슬롯에 배치 */
       const k = i + n * Math.round((pFloat - i) / n);
-      const offset = k - pFloat;
+      const m = ((k % 5) + 5) % 5;
+
+      /* 캐스케이드 rect */
+      const wF = it.tall ? (mobile ? 0.34 : WT_PAT[m]) : (mobile ? 0.60 : W_PAT[m]);
+      const cw = vw * wF;
+      const ch = it.tall ? cw * 16 / 9 : cw * 9 / 16;
+      const cx = Math.min(vw * (mobile ? XM_PAT[m] : X_PAT[m]), vw - cw - vw * 0.04);
+      const cy = vh * 0.30 + (k - pFloat) * vh * 0.62 + vh * YJ_PAT[m];
 
       /* 풀스크린 rect (세로 영상은 데스크톱에서 중앙 필러) */
       let fw, fh, fx;
       if (it.tall && !mobile) { fh = vh; fw = vh * 9 / 16; fx = (vw - fw) / 2; }
       else { fw = vw; fh = vh; fx = 0; }
 
-      /* 겹침 슬라이드: 들어오는 쪽은 아래에서 위로 덮고, 나가는 쪽은 느리게 밀림 */
-      const y = offset >= 0 ? offset * vh : offset * vh * 0.22;
-      const s = slides[i];
-      s.style.transform = `translate3d(${fx.toFixed(1)}px, ${y.toFixed(1)}px, 0) scale(${scale.toFixed(4)})`;
-      s.style.width = fw.toFixed(1) + "px";
-      s.style.height = fh.toFixed(1) + "px";
-      s.style.zIndex = Math.round(100 + offset * 10);
+      /* 멈춘 슬롯의 영상만 확대 */
+      const target = idleExpand && i === idx && nearTarget ? 1 : 0;
+      expand[i] += (target - expand[i]) * 0.09;
+      const e = expand[i] < 0.001 ? 0 : expand[i];
 
-      /* 화면에 걸린 슬라이드만 재생 */
-      if (Math.abs(offset) < 1) { if (videos[i].paused) videos[i].play().catch(() => {}); }
+      const x = cx + (fx - cx) * e;
+      const y = cy + (0 - cy) * e;
+      const w = cw + (fw - cw) * e;
+      const h = ch + (fh - ch) * e;
+      const s = slides[i];
+      s.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
+      s.style.width = w.toFixed(1) + "px";
+      s.style.height = h.toFixed(1) + "px";
+      s.style.zIndex = e > 0.02 ? 300 : Math.max(1, Math.round(120 + (k - pFloat) * 6));
+      tags[i].style.opacity = Math.max(0, 1 - e * 2).toFixed(2);
+
+      /* 화면에 걸린 것 + 확대된 것만 재생 */
+      const onScreen = y < vh && y + h > 0;
+      if (onScreen || e > 0.02) { if (videos[i].paused) videos[i].play().catch(() => {}); }
       else if (!videos[i].paused) videos[i].pause();
     }
 
@@ -274,30 +292,33 @@ if (feed && typeof WORKS !== "undefined") {
       clientEl.textContent = it.client || "";
       if (it.bg) sticky.style.backgroundColor = it.bg;
     }
-    /* 전환 중에는 캡션 페이드아웃, 정착하면 페이드인 */
-    const settle = Math.max(0, 1 - Math.abs(pFloat - Math.round(pFloat)) * 3);
-    cap.style.opacity = settle.toFixed(2);
-    clientEl.style.opacity = settle.toFixed(2);
+    const eAct = expand[idx];
+    cap.style.opacity = eAct.toFixed(2);
+    clientEl.style.opacity = eAct.toFixed(2);
 
     requestAnimationFrame(feedLoop);
   }
   requestAnimationFrame(feedLoop);
 
-  /* 휠/방향키로 수동 이동 (자동 로테이션 타이머 리셋) */
-  let wheelLock = 0;
+  /* 휠: 연속 누적으로 계속 흐르다가, 멈추면 그 자리 영상이 확대 */
+  function settleSoon() {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      targetP = Math.round(targetP);
+      idleExpand = true;
+      holdUntil = performance.now() + HOLD_MS;
+    }, 350);
+  }
   window.addEventListener("wheel", (e) => {
-    const now = performance.now();
-    if (now - wheelLock < 900 || Math.abs(e.deltaY) < 12) return;
-    wheelLock = now;
-    arrived = false;
-    targetIdx += e.deltaY > 0 ? 1 : -1;
-    holdUntil = now + HOLD_MS;
+    idleExpand = false;
+    targetP += (e.deltaY / window.innerHeight) * 1.5;
+    settleSoon();
   }, { passive: true });
   document.addEventListener("keydown", (e) => {
     if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
-    arrived = false;
-    targetIdx += e.key === "ArrowDown" ? 1 : -1;
-    holdUntil = performance.now() + HOLD_MS;
+    idleExpand = false;
+    targetP = Math.round(targetP) + (e.key === "ArrowDown" ? 1 : -1);
+    settleSoon();
   });
 }
 

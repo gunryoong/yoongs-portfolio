@@ -180,7 +180,13 @@ body.menu-open .nav-mobile { display: flex; }
   object-fit: cover;
 }
 .fs-tag {
-  display: none; /* 겹침 슬라이드 전환에서는 미사용 */
+  position: absolute;
+  left: calc(100% + 16px);
+  top: 2px;
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  white-space: nowrap;
 }
 .fs-tag .t-num {
   font-family: var(--mono);
