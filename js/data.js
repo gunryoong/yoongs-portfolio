@@ -37,6 +37,19 @@ const WORKS = {
 
   "ai-video": [
     {
+      src: "assets/ai-video/berex-cf.mp4",
+      poster: "assets/ai-video/berex-cf-poster.jpg",
+      title: "COWAY BEREX — <em>R7 Mattress CF</em>",
+      client: "Coway Berex",
+      type: "video",
+      wide: true,
+      feature: true,
+      meta: "AI Generated Commercial · 16:9 · 30s",
+      bg: "#2b2620",
+      desc: "'잠에도 격이 있다'를 주제로 한 코웨이 비렉스 R7 매트리스 브랜드 필름. 프리미엄 침실 공간, 모델 클로즈업, 제품 디테일까지 AI로 연출했습니다.",
+      lines: ["잠에도, 격이 있다", "당신만의 편안한 휴식 공간", "COWAY BEREX"],
+    },
+    {
       src: "assets/ai-video/esarang-cf.mp4",
       poster: "assets/ai-video/esarang-cf-poster.jpg",
       title: "ESARANG DENTAL — <em>Laminate CF</em>",
