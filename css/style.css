@@ -181,12 +181,13 @@ body.menu-open .nav-mobile { display: flex; }
 }
 .fs-tag {
   position: absolute;
-  left: calc(100% + 16px);
+  left: calc(100% + 18px);
   top: 2px;
   display: flex;
   gap: 12px;
   align-items: baseline;
   white-space: nowrap;
+  transition: opacity 0.3s;
 }
 .fs-tag .t-num {
   font-family: var(--mono);
