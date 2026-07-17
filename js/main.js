@@ -216,26 +216,31 @@ if (feed && typeof WORKS !== "undefined") {
   const HOLD_MS = 6500; /* 각 케이스 풀스크린 유지 시간 */
   const expand = new Array(n).fill(0);
   let pFloat = 0;       /* 현재 위치 (연속값, 무한 증가) */
-  let targetIdx = 0;    /* 목표 케이스 (무한 증가, %n으로 매핑) */
+  let targetP = 0;      /* 목표 위치 (휠 누적으로 연속 변화) */
   let idleExpand = true;
   let holdUntil = performance.now() + HOLD_MS;
+  let lastWheel = -9999;
   let lastIdx = -1;
 
   function feedLoop(t) {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     const mobile = vw <= 768;
+    const settledToTarget = Math.abs(targetP - pFloat) < 0.04;
+    const wheelIdle = t - lastWheel > 260; /* 휠이 멈춘 지 260ms 지남 */
 
-    /* 자동 로테이션: 유지 시간이 지나면 다음 케이스로 */
-    if (idleExpand && t > holdUntil) {
+    /* 자동 로테이션: 유지 시간이 지나면 다음 케이스로 부드럽게 흐름 */
+    if (idleExpand && settledToTarget && t > holdUntil) {
       idleExpand = false;
-      targetIdx += 1;
+      targetP = Math.round(targetP) + 1;
     }
-    pFloat += (targetIdx - pFloat) * 0.055;
-    if (!idleExpand && Math.abs(targetIdx - pFloat) < 0.06) {
-      idleExpand = true;
-      holdUntil = t + HOLD_MS;
+    /* 휠이 멈추면 가장 가까운 케이스로 스냅 + 확대 준비 */
+    if (!idleExpand && wheelIdle) {
+      targetP = Math.round(targetP);
+      if (settledToTarget) { idleExpand = true; holdUntil = t + HOLD_MS; }
     }
+    /* 연속 추종 (부드러운 감속) */
+    pFloat += (targetP - pFloat) * 0.09;
     const idx = ((Math.round(pFloat) % n) + n) % n;
 
     for (let i = 0; i < n; i++) {
@@ -291,20 +296,19 @@ if (feed && typeof WORKS !== "undefined") {
   }
   requestAnimationFrame(feedLoop);
 
-  /* 휠/방향키로 수동 이동 (자동 로테이션 타이머 리셋) */
-  let wheelLock = 0;
+  /* 휠: 델타를 연속 누적 → 케이스 사이를 끊김 없이 흐름 (멈추면 스냅+확대) */
   window.addEventListener("wheel", (e) => {
     const now = performance.now();
-    if (now - wheelLock < 900 || Math.abs(e.deltaY) < 12) return;
-    wheelLock = now;
+    lastWheel = now;
     idleExpand = false;
-    targetIdx += e.deltaY > 0 ? 1 : -1;
+    targetP += (e.deltaY / window.innerHeight) * 1.15;
     holdUntil = now + HOLD_MS;
   }, { passive: true });
   document.addEventListener("keydown", (e) => {
     if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    lastWheel = performance.now();
     idleExpand = false;
-    targetIdx += e.key === "ArrowDown" ? 1 : -1;
+    targetP = Math.round(targetP) + (e.key === "ArrowDown" ? 1 : -1);
     holdUntil = performance.now() + HOLD_MS;
   });
 }
