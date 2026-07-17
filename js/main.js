@@ -311,6 +311,24 @@ if (feed && typeof WORKS !== "undefined") {
     targetP = Math.round(targetP) + (e.key === "ArrowDown" ? 1 : -1);
     holdUntil = performance.now() + HOLD_MS;
   });
+
+  /* 모바일: 터치 스와이프로 케이스 이동 (휠이 없어 스크롤이 안 먹히던 문제) */
+  let touchY = null;
+  feed.addEventListener("touchstart", (e) => {
+    touchY = e.touches[0].clientY;
+  }, { passive: true });
+  feed.addEventListener("touchmove", (e) => {
+    if (touchY === null) return;
+    const y = e.touches[0].clientY;
+    const dy = touchY - y;
+    touchY = y;
+    const now = performance.now();
+    lastWheel = now;
+    idleExpand = false;
+    targetP += (dy / window.innerHeight) * 1.5;
+    holdUntil = now + HOLD_MS;
+  }, { passive: true });
+  feed.addEventListener("touchend", () => { touchY = null; }, { passive: true });
 }
 
 /* lightbox */
