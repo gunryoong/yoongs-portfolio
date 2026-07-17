@@ -154,17 +154,13 @@ if (gallery && typeof WORKS !== "undefined") {
   }
   const railPos = () => (railAnimating ? railTarget : gallery.scrollLeft);
 
-  window.addEventListener("wheel", (e) => {
+  /* 마우스가 레일(영상 줄) 위에 있을 때만 휠을 가로 이동으로 전환, 그밖은 페이지 스크롤 */
+  gallery.addEventListener("wheel", (e) => {
     if (!isDesktop()) return;
     const max = railMax();
     if (max <= 0) return;
-    /* 레일이 화면 중앙 근처에 있을 때만 휠을 가로 이동으로 전환 */
-    const r = gallery.getBoundingClientRect();
-    if (r.bottom < window.innerHeight * 0.35 || r.top > window.innerHeight * 0.75) return;
     const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
     const cur = railPos();
-    /* 양 끝에서는 하이재킹을 풀어 페이지 세로 스크롤로 복귀 */
-    if ((delta > 0 && cur >= max - 1) || (delta < 0 && cur <= 1)) return;
     e.preventDefault();
     railTarget = Math.max(0, Math.min(max, cur + delta));
     railGo();
