@@ -37,6 +37,19 @@ const WORKS = {
 
   "ai-video": [
     {
+      src: "assets/ai-video/earthdrop-cf.mp4",
+      poster: "assets/ai-video/earthdrop-cf-poster.jpg",
+      title: "EARTH DROP — <em>Neroli Glow Serum</em>",
+      client: "Earth Drop",
+      type: "video",
+      tall: true,
+      feature: true,
+      meta: "AI Generated Commercial · 9:16 · 29s",
+      bg: "#2a2318",
+      desc: "'무너진 하루를 채우는 아로마 리추얼'을 주제로 한 네롤리 글로우 세럼 브랜드 필름. 온실 씬, 네롤리 꽃 클로즈업, 제품 골든 디테일까지 AI로 연출했습니다.",
+      lines: ["무너지는 덴 하루", "그리고 차오르는 맑은 속광", "한 방울로 완성하는 아로마 리추얼"],
+    },
+    {
       src: "assets/ai-video/berex-cf.mp4",
       poster: "assets/ai-video/berex-cf-poster.jpg",
       title: "COWAY BEREX — <em>R7 Mattress CF</em>",
