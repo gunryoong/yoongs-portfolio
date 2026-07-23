@@ -130,6 +130,7 @@ const WORKS = {
   ],
 
   "video-editing": [
+    { src: "assets/video-editing/snowkorea.mp4", poster: "assets/video-editing/snowkorea-poster.jpg", type: "video", tall: true },
     { src: "assets/video-editing/sone-kimnamgil.mp4", poster: "assets/video-editing/sone-kimnamgil-poster.jpg", type: "video", tall: true },
     { src: "assets/video-editing/sone-malwang.mp4", poster: "assets/video-editing/sone-malwang-poster.jpg", type: "video", tall: true },
     { src: "assets/video-editing/sone-simeunkyung.mp4", poster: "assets/video-editing/sone-simeunkyung-poster.jpg", type: "video", tall: true },
