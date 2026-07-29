@@ -37,6 +37,19 @@ const WORKS = {
 
   "ai-video": [
     {
+      src: "assets/ai-video/zishen-cf.mp4",
+      poster: "assets/ai-video/zishen-cf-poster.jpg",
+      title: "ZISHEN — <em>Dear Myself</em>",
+      client: "Zishen",
+      type: "video",
+      wide: true,
+      feature: true,
+      meta: "AI Generated Fashion Film · 16:9 · 30s",
+      bg: "#20242a",
+      desc: "'Dear Myself'을 주제로 한 여성 패션 브랜드 캠페인 필름. 도시를 걷는 여성, 레코드샵, 강변의 사색까지 — 일상의 결을 담은 라이프스타일 씬을 AI로 연출했습니다.",
+      lines: ["나에게 건네는 하루", "도시를 걷고, 머물고", "온전히, 나답게", "Dear Myself"],
+    },
+    {
       src: "assets/ai-video/earthdrop-cf.mp4",
       poster: "assets/ai-video/earthdrop-cf-poster.jpg",
       title: "EARTH DROP — <em>Neroli Glow Serum</em>",
