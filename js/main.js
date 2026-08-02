@@ -1,6 +1,15 @@
 /* yoong's portfolio — shared script */
 
 const pad2 = (n) => String(n).padStart(2, "0");
+/* 방문할 때마다 순서를 랜덤으로 (Fisher-Yates) */
+const shuffle = (arr) => {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+};
 
 /* header scroll state */
 const header = document.querySelector(".site-header");
@@ -24,7 +33,7 @@ if (gallery && typeof WORKS !== "undefined") {
   if (masonry) {
     /* 랜덤 갤러리 — 방문할 때마다 순서 셔플 */
     gallery.classList.add("masonry");
-    [...items].sort(() => Math.random() - 0.5).forEach((item) => {
+    shuffle(items).forEach((item) => {
       const el = document.createElement("figure");
       el.className = "work reveal";
       el.innerHTML = `<div class="frame"><img src="${item.src}" alt="" loading="lazy"></div>`;
@@ -34,7 +43,7 @@ if (gallery && typeof WORKS !== "undefined") {
   }
 
   if (!masonry) {
-    items.forEach((item, i) => {
+    shuffle(items).forEach((item, i) => {
       const el = document.createElement("figure");
       const frameClass = item.tall ? " tall" : item.wide ? " wide" : "";
       const poster = item.poster ? ` poster="${item.poster}"` : "";
@@ -180,7 +189,7 @@ if (gallery && typeof WORKS !== "undefined") {
 /* ---- 메인: 다크 캐스케이드 피드 (스크롤 중 썸네일 스택, 멈추면 풀스크린 확대) ---- */
 const feed = document.querySelector(".feed");
 if (feed && typeof WORKS !== "undefined") {
-  const vids = (WORKS["ai-video"] || []).filter((v) => v.type === "video");
+  const vids = shuffle((WORKS["ai-video"] || []).filter((v) => v.type === "video"));
   const slidesEl = feed.querySelector(".feed-slides");
   const sticky = feed.querySelector(".feed-sticky");
   const cap = feed.querySelector(".feed-cap");

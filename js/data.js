@@ -143,6 +143,11 @@ const WORKS = {
   ],
 
   "video-editing": [
+    { src: "assets/video-editing/sp-limchangjung.mp4", poster: "assets/video-editing/sp-limchangjung-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/sp-newsreport.mp4", poster: "assets/video-editing/sp-newsreport-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/sp-japan.mp4", poster: "assets/video-editing/sp-japan-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/sp-skull.mp4", poster: "assets/video-editing/sp-skull-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/sp-impact.mp4", poster: "assets/video-editing/sp-impact-poster.jpg", type: "video", tall: true },
     { src: "assets/video-editing/snowkorea.mp4", poster: "assets/video-editing/snowkorea-poster.jpg", type: "video", tall: true },
     { src: "assets/video-editing/sone-kimnamgil.mp4", poster: "assets/video-editing/sone-kimnamgil-poster.jpg", type: "video", tall: true },
     { src: "assets/video-editing/sone-malwang.mp4", poster: "assets/video-editing/sone-malwang-poster.jpg", type: "video", tall: true },
