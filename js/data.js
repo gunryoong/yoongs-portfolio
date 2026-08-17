@@ -37,6 +37,19 @@ const WORKS = {
 
   "ai-video": [
     {
+      src: "assets/ai-video/anitoy-cf.mp4",
+      poster: "assets/ai-video/anitoy-cf-poster.jpg",
+      title: "ANITOY — <em>Chuncheon Festival</em>",
+      client: "Anitoy Festival",
+      type: "video",
+      wide: true,
+      feature: true,
+      meta: "AI Generated Animation · 16:9 · 50s",
+      bg: "#141d33",
+      desc: "2026 춘천 애니토이 페스티벌 AI 애니메이션 공모전 출품작. 토이 캐릭터가 사는 블록 도시, 빛의 큐브, 밤 축제까지 — 세계관과 3D 애니메이션을 AI로 연출했습니다.",
+      lines: ["장난감들의 도시", "빛의 큐브를 깨우다", "축제의 밤이 열린다", "2026 Chuncheon Anitoy"],
+    },
+    {
       src: "assets/ai-video/zishen-cf.mp4",
       poster: "assets/ai-video/zishen-cf-poster.jpg",
       title: "ZISHEN — <em>Dear Myself</em>",
@@ -143,6 +156,14 @@ const WORKS = {
   ],
 
   "video-editing": [
+    { src: "assets/video-editing/sp-prison.mp4", poster: "assets/video-editing/sp-prison-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/sp-taptap.mp4", poster: "assets/video-editing/sp-taptap-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/sp-monk.mp4", poster: "assets/video-editing/sp-monk-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/sp-creator.mp4", poster: "assets/video-editing/sp-creator-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/sp-experiment.mp4", poster: "assets/video-editing/sp-experiment-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/sp-ban.mp4", poster: "assets/video-editing/sp-ban-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/sp-negoking.mp4", poster: "assets/video-editing/sp-negoking-poster.jpg", type: "video", tall: true },
+    { src: "assets/video-editing/sp-japan2.mp4", poster: "assets/video-editing/sp-japan2-poster.jpg", type: "video", tall: true },
     { src: "assets/video-editing/sp-limchangjung.mp4", poster: "assets/video-editing/sp-limchangjung-poster.jpg", type: "video", tall: true },
     { src: "assets/video-editing/sp-newsreport.mp4", poster: "assets/video-editing/sp-newsreport-poster.jpg", type: "video", tall: true },
     { src: "assets/video-editing/sp-japan.mp4", poster: "assets/video-editing/sp-japan-poster.jpg", type: "video", tall: true },
