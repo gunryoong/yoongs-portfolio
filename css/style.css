@@ -496,6 +496,12 @@ body.over-feed .nav-toggle span { background: #f2efe8; }
   text-transform: uppercase;
   color: var(--ink-faint);
 }
+.feature-text .f-award {
+  margin-top: 14px;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+.feature-text .f-award strong { color: var(--ink); font-weight: 600; margin-right: 6px; }
 .feature-text .f-desc {
   margin-top: 24px;
   max-width: 46ch;
@@ -657,6 +663,29 @@ body.over-feed .nav-toggle span { background: #f2efe8; }
   content: "→ ";
   color: var(--ink-faint);
 }
+.awards {
+  padding: 0 var(--pad) 110px;
+}
+.awards h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1.15;
+  margin-bottom: 32px;
+}
+.award-list { list-style: none; border-top: 1px solid var(--line); }
+.award-list li {
+  display: grid;
+  grid-template-columns: 64px 72px 1fr;
+  gap: 12px;
+  align-items: baseline;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+.award-list .a-year { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--ink-faint); }
+.award-list .a-rank { color: var(--ink); font-weight: 600; }
 
 /* ---------- footer ---------- */
 .site-footer {

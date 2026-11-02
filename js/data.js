@@ -212,3 +212,11 @@ const WORKS = {
     { src: "assets/video-editing/ezed-perfume-4.mp4", poster: "assets/video-editing/ezed-perfume-4-poster.jpg", type: "video", tall: true, sensitive: true },
   ],
 };
+
+/* 수상내역 — Contact 목록과 AI 영상 설명에 함께 표시 (src로 작품 연결) */
+const AWARDS = [
+  { year: "2026", rank: "우승", contest: "이사랑치과의원 라미네이트 브랜딩 영상 공모전", src: "assets/ai-video/esarang-cf.mp4" },
+  { year: "2026", rank: "2위", contest: "제3회 지센(ZISHEN) AI 영상 콘테스트", src: "assets/ai-video/zishen-cf.mp4" },
+  { year: "2026", rank: "장려상", contest: "2026 춘천 애니토이 페스티벌 AI 애니메이션 공모전", src: "assets/ai-video/anitoy-cf.mp4" },
+  { year: "2026", rank: "입선", contest: "2026 미디어센터관악 생성형 AI 영상 콘텐츠 공모전 〈GAIFF〉", src: "assets/ai-video/gwanak-cf.mp4" },
+];

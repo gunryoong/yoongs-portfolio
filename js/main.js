@@ -23,6 +23,13 @@ if (toggle) {
   toggle.addEventListener("click", () => document.body.classList.toggle("menu-open"));
 }
 
+/* 수상내역 목록 (contact) */
+const awardList = document.querySelector("[data-awards]");
+if (awardList) {
+  awardList.innerHTML = AWARDS.map((a) => `
+    <li><span class="a-year">${a.year}</span><span class="a-rank">${a.rank}</span><span class="a-contest">${a.contest}</span></li>`).join("");
+}
+
 /* gallery render (category pages) */
 const gallery = document.querySelector("[data-gallery]");
 if (gallery && typeof WORKS !== "undefined") {
@@ -54,12 +61,14 @@ if (gallery && typeof WORKS !== "undefined") {
         const media = item.type === "video"
           ? `<video src="${item.src}"${poster} muted loop playsinline preload="none"></video>`
           : `<img src="${item.src}" alt="" loading="lazy">`;
+        const award = AWARDS.find((a) => a.src === item.src);
         el.innerHTML = `
           <div class="frame${frameClass}">${media}</div>
           <div class="feature-text">
             <p class="f-kicker">Case ${pad2(i + 1)}${item.client ? " — " + item.client : ""}</p>
             <h2 class="f-title">${item.title || ""}</h2>
             ${item.meta ? `<p class="f-meta">${item.meta}</p>` : ""}
+            ${award ? `<p class="f-award"><strong>${award.rank}</strong> ${award.contest}</p>` : ""}
             ${item.desc ? `<p class="f-desc">${item.desc}</p>` : ""}
             ${item.lines ? `<ul class="f-lines">${item.lines
               .map((l, j) => `<li><span class="l-num">${String(j + 1).padStart(2, "0")}</span><span class="l-text">${l}</span></li>`)
