@@ -50,6 +50,32 @@ const WORKS = {
       lines: ["장난감들의 도시", "빛의 큐브를 깨우다", "축제의 밤이 열린다", "2026 Chuncheon Anitoy"],
     },
     {
+      src: "assets/ai-video/gwanak-cf.mp4",
+      poster: "assets/ai-video/gwanak-cf-poster.jpg",
+      title: "GWANAK — <em>The Star Rises Again</em>",
+      client: "미디어센터관악 GAIFF",
+      type: "video",
+      wide: true,
+      feature: true,
+      meta: "AI Generated Film · 16:9 · 59s",
+      bg: "#141a2c",
+      desc: "2026 미디어센터관악 생성형 AI 영상 콘텐츠 공모전 〈GAIFF〉 작품 〈낙성, 다시 뜨다〉. 천 년 전 낙성대에 떨어진 별빛이 오늘 관악 주민들의 손끝에 내려앉는 이야기를 AI로 연출했습니다.",
+      lines: ["천 년 전, 별이 떨어진 밤", "골목마다 내려앉은 작은 빛", "관악의 내일은, 주민이 밝힌다"],
+    },
+    {
+      src: "assets/ai-video/kinfa-cf.mp4",
+      poster: "assets/ai-video/kinfa-cf-poster.jpg",
+      title: "KINFA — <em>Somewhere Good</em>",
+      client: "서민금융진흥원",
+      type: "video",
+      tall: true,
+      feature: true,
+      meta: "AI Generated Short Drama · 9:16 · 31s",
+      bg: "#2a2219",
+      desc: "제2회 서민금융진흥원 숏폼 영상제 작품 〈좋은 데로 가〉. '사람 살리는 금융'을 주제로, 집을 떠나야 했던 가족이 다시 일어서는 과정을 AI 드라마로 연출했습니다.",
+      lines: ["아빠, 우리 어디 가?", "응, 좋은 데로 가", "사람 살리는 금융"],
+    },
+    {
       src: "assets/ai-video/zishen-cf.mp4",
       poster: "assets/ai-video/zishen-cf-poster.jpg",
       title: "ZISHEN — <em>Dear Myself</em>",
@@ -114,6 +140,7 @@ const WORKS = {
       desc: "지친 오후의 사무실에서 시작해 한 포의 젤리로 끝나는 15초 풀퍼널 커머셜. 기획·카피부터 이미지 및 모션 생성, 편집까지 전 과정을 AI 파이프라인으로 제작했습니다.",
       lines: ["오후 3시, 또 졸려", "딱 한 포면 돼!", "데일리 루틴 — 매일, 빛나는 변화"],
     },
+    /* 숨김
     {
       src: "assets/ai-video/glenraven-cf.mp4",
       poster: "assets/ai-video/glenraven-cf-poster.jpg",
@@ -127,6 +154,7 @@ const WORKS = {
       desc: "스코틀랜드 하이랜드의 증류소에서 한 잔의 위스키까지 — 항공 씬, 리퀴드 클로즈업, 라벨 디테일까지 AI로 연출한 싱글몰트 브랜드 필름.",
       lines: ["하이랜드의 아침", "오크통에서 글라스로", "얼음 위로, 깊게", "Aged 18 Years"],
     },
+    */
     {
       src: "assets/ai-video/lumiere-cf.mp4",
       poster: "assets/ai-video/lumiere-cf-poster.jpg",
@@ -140,6 +168,7 @@ const WORKS = {
       desc: "골든아워의 빛으로 완성한 럭셔리 세럼 필름. 피부 위 빛의 결을 시각화하는 연출과 카피라이팅까지 AI 파이프라인으로 제작했습니다.",
       lines: ["나는 나에게 가장 좋은 걸 줘요", "피부가 먼저 알아요", "당신의 우아함은 —", "Lumière"],
     },
+    /* 숨김
     {
       src: "assets/ai-video/aether-cf.mp4",
       poster: "assets/ai-video/aether-cf-poster.jpg",
@@ -153,6 +182,7 @@ const WORKS = {
       desc: "네온이 흐르는 도시의 밤을 달리는 에너지 드링크 런칭 필름. 매크로, 스트리트, 파티 씬까지 브랜드 세계관 전체를 AI로 구축했습니다.",
       lines: ["네온이 깨어나는 시간", "차가운 첫 모금", "도시를 가로질러", "Unleash the Night"],
     },
+    */
   ],
 
   "video-editing": [
