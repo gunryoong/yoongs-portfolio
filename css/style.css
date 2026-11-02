@@ -497,11 +497,17 @@ body.over-feed .nav-toggle span { background: #f2efe8; }
   color: var(--ink-faint);
 }
 .feature-text .f-award {
-  margin-top: 14px;
-  color: var(--ink-soft);
+  display: inline-block;
+  margin-top: 16px;
+  padding: 7px 14px;
+  border: 1px solid var(--ink);
+  border-radius: 6px;
+  color: var(--ink);
   font-size: 13px;
+  line-height: 1.4;
+  word-break: keep-all;
 }
-.feature-text .f-award strong { color: var(--ink); font-weight: 600; margin-right: 6px; }
+.feature-text .f-award strong { font-weight: 700; margin-right: 8px; padding-right: 8px; border-right: 1px solid var(--line); }
 .feature-text .f-desc {
   margin-top: 24px;
   max-width: 46ch;
@@ -681,11 +687,12 @@ body.over-feed .nav-toggle span { background: #f2efe8; }
   align-items: baseline;
   padding: 16px 0;
   border-bottom: 1px solid var(--line);
-  font-size: 14px;
-  color: var(--ink-soft);
+  font-size: 15px;
+  color: var(--ink);
+  word-break: keep-all;
 }
-.award-list .a-year { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--ink-faint); }
-.award-list .a-rank { color: var(--ink); font-weight: 600; }
+.award-list .a-year { font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; color: var(--ink-soft); }
+.award-list .a-rank { font-weight: 700; }
 
 /* ---------- footer ---------- */
 .site-footer {

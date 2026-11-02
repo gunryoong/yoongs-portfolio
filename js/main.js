@@ -67,8 +67,8 @@ if (gallery && typeof WORKS !== "undefined") {
           <div class="feature-text">
             <p class="f-kicker">Case ${pad2(i + 1)}${item.client ? " — " + item.client : ""}</p>
             <h2 class="f-title">${item.title || ""}</h2>
+            ${award ? `<p class="f-award"><strong>${award.rank}</strong>${award.contest}</p>` : ""}
             ${item.meta ? `<p class="f-meta">${item.meta}</p>` : ""}
-            ${award ? `<p class="f-award"><strong>${award.rank}</strong> ${award.contest}</p>` : ""}
             ${item.desc ? `<p class="f-desc">${item.desc}</p>` : ""}
             ${item.lines ? `<ul class="f-lines">${item.lines
               .map((l, j) => `<li><span class="l-num">${String(j + 1).padStart(2, "0")}</span><span class="l-text">${l}</span></li>`)
